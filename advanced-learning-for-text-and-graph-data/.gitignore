@@ -1,0 +1,7 @@
+__pycache__/
+.DS_Store
+__MACOSX/
+*.zip
+lab6-deepwalk-and-gnn/data/web_sample.edgelist
+lab6-deepwalk-and-gnn/data/cora.content
+lab4-graph-analysis-and-kernels/datasets/MUTAG/processed/
