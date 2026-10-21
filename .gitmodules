@@ -10,3 +10,6 @@
 [submodule "dl-for-medical-imaging/histopathology-OOD-classification"]
 	path = dl-for-medical-imaging/histopathology-OOD-classification
 	url = https://github.com/vujadinovicn/histopathology-OOD-classification
+[submodule "advanced-learning-for-text-and-graph-data/molecular-graph-captioning"]
+	path = advanced-learning-for-text-and-graph-data/molecular-graph-captioning
+	url = https://github.com/vujadinovicn/molecular-graph-captioning
