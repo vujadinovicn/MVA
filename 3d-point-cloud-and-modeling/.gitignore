@@ -1,0 +1,11 @@
+__pycache__/
+*.npy
+
+# generated outputs
+lab1-3d-perception/decimated.ply
+lab1-3d-perception/grid_decimated.ply
+lab1-3d-perception/little_bunny.ply
+lab2-registration/bunny_r_opt.ply
+lab3-local-descriptors/Lille_street_small_*.ply
+lab4-reconstruction/*.ply
+lab4-reconstruction/data/bunny_normals.ply
