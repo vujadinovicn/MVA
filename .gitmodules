@@ -1,0 +1,6 @@
+[submodule "probabilistic-generative-models/course-project"]
+	path = probabilistic-generative-models/course-project
+	url = https://github.com/vujadinovicn/DDPM
+[submodule "probabilistic-generative-models/DDPM"]
+	path = probabilistic-generative-models/DDPM
+	url = https://github.com/vujadinovicn/DDPM
