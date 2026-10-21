@@ -16,3 +16,6 @@
 [submodule "geometric-deep-learning/zero-1-to-3-review"]
 	path = geometric-deep-learning/zero-1-to-3-review
 	url = https://github.com/vujadinovicn/zero-1-to-3-review
+[submodule "3d-point-cloud-and-modeling/3DETR"]
+	path = 3d-point-cloud-and-modeling/3DETR
+	url = https://github.com/vujadinovicn/3DETR.git

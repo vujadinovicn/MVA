@@ -24,6 +24,7 @@ The course is about the acquisition, processing and visualization of 3D point cl
 | Lab 4 | Surface reconstruction | [lab4-reconstruction](lab4-reconstruction) |
 | Lab 5 | Modeling and segmentation with RANSAC | [lab5-modeling-segmentation](lab5-modeling-segmentation) |
 | Lab 6 | PointNet | [lab6-deep-learning](lab6-deep-learning) |
+| Project | Review, reproduction and extensions of 3DETR (Misra et al., ICCV 2021) | [3DETR](3DETR) |
 
 Each folder has the code, my report (`report.pdf`) and the assignment (`handout.pdf`).
 
@@ -62,3 +63,13 @@ We implement RANSAC plane detection, then a recursive version that extracts seve
 Code: [lab6-deep-learning](lab6-deep-learning), report: [report.pdf](lab6-deep-learning/report.pdf)
 
 We implement PointNet in PyTorch for point cloud classification on ModelNet. We start with the basic version, then add the T-Net alignment network, and finally try our own 3D data augmentation.
+
+## Project: 3DETR
+
+Repository: [vujadinovicn/3DETR](https://github.com/vujadinovicn/3DETR)
+
+We review, reproduce and extend "An End-to-End Transformer Model for 3D Object Detection" (3DETR, Misra et al., ICCV 2021), built on the official code. The main contributions are:
+- **Reproduction.** 3DETR and 3DETR-m on ScanNetV2 with the official checkpoints, within 1.2 AP25 of the paper.
+- **Ablations the official repo does not ship.** The number of queries, compared with VoteNet, and the effect of NMS. Without NMS, 3DETR loses less than 1 AP25, while VoteNet collapses.
+- **Classification.** The 3DETR encoder re-implemented for ModelNet40 classification.
+- **Two analyses beyond the paper.** Recall as a function of object size and point count, which shows that small objects are the weak spot, and visualization of the decoder cross-attention maps.
