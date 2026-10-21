@@ -25,6 +25,7 @@ The course is about machine learning and state-of-the-art AI methods for text an
 | Lab 5 | Distillation and RAG | [lab5-distillation-and-rag](lab5-distillation-and-rag) |
 | Lab 6 | DeepWalk and GNNs | [lab6-deepwalk-and-gnn](lab6-deepwalk-and-gnn) |
 | Lab 7 | GAT and variational graph autoencoders | [lab7-gat-and-vgae](lab7-gat-and-vgae) |
+| Project | Molecular graph captioning (data challenge) | [molecular-graph-captioning](molecular-graph-captioning) |
 
 ## Lab 1: Neural machine translation
 
@@ -69,3 +70,9 @@ The two big data files (`web_sample.edgelist` and `cora.content`) are not in the
 Code: [lab7-gat-and-vgae](lab7-gat-and-vgae), report: [report.pdf](lab7-gat-and-vgae/report.pdf)
 
 We implement a graph attention network (GAT) and use it for node classification, then look at the learned attention scores. We also implement a variational graph autoencoder (VGAE) and use it for graph generation.
+
+## Project: Molecular graph captioning
+
+Repository: [vujadinovicn/molecular-graph-captioning](https://github.com/vujadinovicn/molecular-graph-captioning)
+
+Our solution to the ALTEGRAD 2025 data challenge: given a molecule as a graph of atoms and bonds, generate the natural-language description of it. We connect a GNN encoder to a LLaMA model in two stages. First a contrastive alignment of the graph embeddings with the LLM features, then prefix-tuning of the LLM on the graph embeddings. We compare several variants: the graph model (from scratch, pre-trained and frozen, or fine-tuned), the way the LLM is tuned, its size (1B, 3B, 8B) and a re-ranking of the generated captions.
