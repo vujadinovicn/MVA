@@ -20,6 +20,7 @@ The course is about analysing 3D geometry, mostly surfaces and meshes. The first
 | TD2 | Surface parameterization and alignment (Tutte, LSCM, ICP, ARAP) | [td2-parameterization-and-alignment](td2-parameterization-and-alignment) |
 | TD4 | DiffusionNet for RNA surface segmentation | [td4-diffusionnet-rna-segmentation](td4-diffusionnet-rna-segmentation) |
 | TD6 | Implicit shape interpolation with SIREN | [td6-implicit-shape-interpolation](td6-implicit-shape-interpolation) |
+| Project | Paper review of Zero-1-to-3 (Liu et al., ICCV 2023) | [zero-1-to-3-review](zero-1-to-3-review) |
 
 ## TD2: Surface parameterization and alignment
 
@@ -73,3 +74,9 @@ We write the losses ourselves:
 We test it on simple 2D shapes by interpolating between a square and a circle. The bonus part tries the same approach on real shapes.
 
 Libraries: PyTorch.
+
+## Project: Zero-1-to-3 review
+
+Repository: [vujadinovicn/zero-1-to-3-review](https://github.com/vujadinovicn/zero-1-to-3-review), slides: [presentation.pdf](zero-1-to-3-review/presentation.pdf)
+
+The final project is the review and presentation of a research paper. We reviewed "Zero-1-to-3: Zero-shot One Image to 3D Object" (Liu et al., ICCV 2023), a camera-conditioned diffusion model that generates new views of an object from a single image. We also wrote a script that runs the released pretrained model to generate six views of an input object (front, right, back, left, top and bottom).

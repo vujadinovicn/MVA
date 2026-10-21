@@ -13,3 +13,6 @@
 [submodule "advanced-learning-for-text-and-graph-data/molecular-graph-captioning"]
 	path = advanced-learning-for-text-and-graph-data/molecular-graph-captioning
 	url = https://github.com/vujadinovicn/molecular-graph-captioning
+[submodule "geometric-deep-learning/zero-1-to-3-review"]
+	path = geometric-deep-learning/zero-1-to-3-review
+	url = https://github.com/vujadinovicn/zero-1-to-3-review
