@@ -1,0 +1,285 @@
+Logging output to test_and_submit_20260322_005917.log
+==========================================
+ Part 1 — Structured Generation Benchmarks
+==========================================
+--- Naive vs. DFA masking benchmark ---
+Regex: ([0-9]+)?\.[0-9]+
+Generating 7 tokens per run, median of 3 repeats
+
+  Vocab size   Naive (ms/step)  DFA mask (ms/step)  DFA precomp (ms)   Speedup
+--------------------------------------------------------------------------------
+         100            0.47ms             0.029ms             1.1ms       16x
+         500            2.16ms             0.035ms             2.0ms       62x
+       1,000            4.31ms             0.042ms             3.0ms      102x
+       5,000           21.29ms             0.096ms            12.1ms      221x
+      10,000           42.31ms             0.168ms            25.0ms      252x
+--- Character-to-token FSM demo ---
+============================================================
+Character-level DFA → Token-level FSM
+============================================================
+
+Regex:      ([0-9]+)?\.[0-9]+
+Vocabulary: ['a', '.', '.2', '1']
+
+── Raw character-level DFA ──
+  States:  frozenset({0, 1, 2, 3, 4, 5})
+  Initial: 0
+  Finals:  frozenset({4, 5})
+  Transitions:
+    State 0: {0: 1, 1: 2}
+    State 1: {0: 3, 1: 2}
+    State 2: {0: 4}
+    State 3: {0: 3, 1: 2}
+    State 4: {0: 5}
+    State 5: {0: 5}
+
+── Cleaned DFA (state mapping: {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5}) ──
+  States:  frozenset({0, 1, 2, 3, 4, 5, 6})
+  Initial: 0
+  Finals:  frozenset({4, 5})
+
+── Token-level FSM ──
+  Initial state: 0
+  Accept states: {4, 5}
+
+  Transition table (state → token → next_state):
+    State 0 --[1: '.']→ State 2
+    State 0 --[2: '.2']→ State 4
+    State 0 --[3: '1']→ State 1
+    State 1 --[1: '.']→ State 2
+    State 1 --[2: '.2']→ State 4
+    State 1 --[3: '1']→ State 3
+    State 2 --[3: '1']→ State 4
+    State 3 --[1: '.']→ State 2
+    State 3 --[2: '.2']→ State 4
+    State 3 --[3: '1']→ State 3
+    State 4 --[3: '1']→ State 5
+    State 5 --[3: '1']→ State 5
+
+── Constrained generation ──
+  Step 0: state=0, allowed=['.', '.2', '1'], sampled='1' → state=1
+  Step 1: state=1, allowed=['.', '.2', '1'], sampled='1' → state=3
+  Step 2: state=3, allowed=['.', '.2', '1'], sampled='.2' → state=4
+  Step 3: state=4, allowed=['1'], sampled='1' → state=5
+  Step 4: state=5, allowed=['1'], sampled='1' → state=5
+  Step 5: state=5, allowed=['1'], sampled='1' → state=5
+  Step 6: state=5, allowed=['1'], sampled='1' → state=5
+
+  Final completion: '11.21111'
+  In accept state?  True
+--- Coalescence benchmark on GPT-2 vocab ---
+PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+================================================================================
+GPT-2 JSON benchmark
+================================================================================
+
+Tokenizer: gpt2 (50,257 tokens)
+Generating 15 tokens per run, mean +/- std of 30 repeats (1 warmup)
+
+--- simple ---
+  Pattern: \{"name":("John"|"Paul"),"age":(20|30)\}
+  Build:                            937 ms
+  Full step (ms/step):
+    FSM (precomputed mask):          0.707 +/- 0.010
+    Longest-token coalescence:       0.094 +/- 0.000
+    Speedup (FSM vs coalescence):      7.5x
+
+--- complex ---
+  Pattern: \{"name":("Alice"|"Bob"|"Charlie"|"Diana"|"Eve"),"age":(1[89]|[2-5][0-9]|6[0-5]),"city":("Paris"|"London"|"New York"|"Tokyo"|"Berlin"),"active":(true|false),"score":(100|[1-9][0-9]?)\}
+  Build:                           2140 ms
+  Full step (ms/step):
+    FSM (precomputed mask):          0.706 +/- 0.009
+    Longest-token coalescence:       0.141 +/- 0.001
+    Speedup (FSM vs coalescence):      5.0x
+
+--- very_complex ---
+  Pattern: \{"id":([1-9][0-9]{0,4}),"first_name":("Alice"|"Bob"|"Charlie"|"Diana"|"Eve"|"Frank"|"Grace"|"Hector"),"last_name":("Smith"|"Johnson"|"Williams"|"Brown"|"Jones"|"Garcia"|"Miller"),"email":"[a-z]{3,8}@(gmail|yahoo|outlook)\.com","age":(1[89]|[2-9][0-9]|100),"address":\{"street":"[0-9]{1,4} (Main|Oak|Elm|Park|Cedar|Maple) (St|Ave|Blvd|Dr)","city":("Paris"|"London"|"New York"|"Tokyo"|"Berlin"|"Sydney"|"Toronto"|"Seoul"),"zip":"[0-9]{5}"\},"role":("admin"|"editor"|"viewer"|"moderator"),"verified":(true|false),"score":(0|[1-9][0-9]?|100),"tags":\["(python|rust|java|go|typescript)"(,"(python|rust|java|go|typescript)"){0,2}\]\}
+  Build:                           8444 ms
+  Full step (ms/step):
+    FSM (precomputed mask):          0.711 +/- 0.019
+    Longest-token coalescence:       0.142 +/- 0.003
+    Speedup (FSM vs coalescence):      5.0x
+
+--- End-to-end constrained generation ---
+PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+======================================================================
+picoGPT + FSM Constrained Generation
+======================================================================
+
+Loading GPT-2 weights from HuggingFace (safetensors)...
+  Loading cached weights from /workspace/llm_controlled-generation/structured_generation/.model_cache/openai-community--gpt2.npz
+Model loaded: 12 layers, 12 heads, 50,257 tokens
+
+Prompt (shared):
+Convert each user profile to a JSON record.
+Profile: Alice Smith, 29, admin at 42 Main St, Paris 75001, loves python and rust, verified, score 82, email alice@gmail.com
+{"id":1,"first_name":"Alice","last_name":"Smith","email":"alice@gmail.com","age":29,"address":{"street":"42 Main St","city":"Paris","zip":"75001"},"role":"admin","verified":true,"score":82,"tags":["python","rust"]}
+Profile: Bob Johnson, 45, viewer at 7 Oak Ave, Tokyo 10001, go developer, not verified, score 15, email bob@yahoo.com
+{"id":2,"first_name":"Bob","last_name":"Johnson","email":"bob@yahoo.com","age":45,"address":{"street":"7 Oak Ave","city":"Tokyo","zip":"10001"},"role":"viewer","verified":false,"score":15,"tags":["go"]}
+Profile: Diana Garcia, 33, editor at 156 Elm Blvd, Berlin 10115, java and typescript, verified, score 97, email diana@outlook.com
+
+
+--- Unconstrained generation (temp=0.0, stop at closing }) ---
+  Output: {"id":3,"first_name":"Diana","last_name":"Garcia","email":"diana@outlook.com","age":33,"address":{"street":"156 Elm Blvd","city":"Berlin","zip":"10001"},"role":"editor","verified":false,"score":97,"tags":["java","java-lang"]}
+  Tokens: '{"'(4895) 'id'(312) '":'(1298) '3'(18) ',"'(553) 'first'(11085) '_'(62) 'name'(3672) '":"'(2404) 'D'(35) 'iana'(7484) '","'(2430) 'last'(12957) '_'(62) 'name'(3672) '":"'(2404) 'G'(38) 'arc'(5605) 'ia'(544) '","'(2430) 'email'(12888) '":"'(2404) 'd'(67) 'iana'(7484) '@'(31) 'out'(448) 'look'(5460) '.'(13) 'com'(785) '","'(2430) 'age'(496) '":'(1298) '33'(2091) ',"'(553) 'address'(21975) '":{"'(8351) 'street'(25662) '":"'(2404) '156'(21599) ' Elm'(35189) ' Blvd'(29402) '","'(2430) 'city'(19205) '":"'(2404) 'Ber'(24814) 'lin'(2815) '","'(2430) 'zip'(13344) '":"'(2404) '100'(3064) '01'(486) '"},"'(13018) 'role'(18090) '":"'(2404) 'editor'(35352) '","'(2430) 'verified'(47684) '":'(1298) 'false'(9562) ',"'(553) 'score'(26675) '":'(1298) '97'(5607) ',"'(553) 'tags'(31499) '":["'(26358) 'java'(12355) '","'(2430) 'java'(12355) '-'(12) 'lang'(17204) '"]'(8973) '}'(92)
+  Time: 859.4s (73 tokens)
+  Regex test: FAIL (output does NOT match JSON_VERY_COMPLEX)
+
+--- Constrained generation (JSON_VERY_COMPLEX) ---
+  Result:  {"id":3,"first_name":"Diana","last_name":"Garcia","email":"diana@outlook.com","age":33,"address":{"street":"156 Elm St","city":"Berlin","zip":"10001"},"role":"editor","verified":false,"score":97,"tags":["java"]}
+  Tokens:  '{"'(4895) 'id'(312) '":'(1298) '3'(18) ',"'(553) 'first'(11085) '_'(62) 'name'(3672) '":"'(2404) 'D'(35) 'iana'(7484) '","'(2430) 'last'(12957) '_'(62) 'name'(3672) '":"'(2404) 'G'(38) 'arc'(5605) 'ia'(544) '","'(2430) 'email'(12888) '":"'(2404) 'd'(67) 'iana'(7484) '@'(31) 'out'(448) 'look'(5460) '.'(13) 'com'(785) '","'(2430) 'age'(496) '":'(1298) '33'(2091) ',"'(553) 'address'(21975) '":{"'(8351) 'street'(25662) '":"'(2404) '156'(21599) ' Elm'(35189) ' '(220) 'St'(1273) '","'(2430) 'city'(19205) '":"'(2404) 'Ber'(24814) 'lin'(2815) '","'(2430) 'zip'(13344) '":"'(2404) '100'(3064) '01'(486) '"},"'(13018) 'role'(18090) '":"'(2404) 'editor'(35352) '","'(2430) 'verified'(47684) '":'(1298) 'false'(9562) ',"'(553) 'score'(26675) '":'(1298) '97'(5607) ',"'(553) 'tags'(31499) '":["'(26358) 'java'(12355) '"'(1) ']'(60) '}'(92)
+  Time: 212.8s (71 tokens, 51 coalesced, 20 model)
+  Regex test: PASS (output matches JSON_VERY_COMPLEX)
+
+
+==========================================
+ Running Required Tests
+==========================================
+--- Part 1 tests ---
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.2, pluggy-1.6.0 -- /workspace/llm_controlled-generation/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/llm_controlled-generation
+configfile: pyproject.toml
+plugins: anyio-4.12.1
+collecting ... collected 55 items
+
+tests/test_structured_generation_required.py::TestNaiveMask::test_valid_tokens_have_zero_mask PASSED [  1%]
+tests/test_structured_generation_required.py::TestNaiveMask::test_after_dot_digits_valid PASSED [  3%]
+tests/test_structured_generation_required.py::TestNaiveMask::test_returns_numpy_array PASSED [  5%]
+tests/test_structured_generation_required.py::TestNaiveMask::test_all_invalid_vocabulary PASSED [  7%]
+tests/test_structured_generation_required.py::TestNaiveMask::test_multichar_token_partial_match PASSED [  9%]
+tests/test_structured_generation_required.py::TestBuildDfaIndex::test_returns_three_elements PASSED [ 10%]
+tests/test_structured_generation_required.py::TestBuildDfaIndex::test_fsm_has_initial_state PASSED [ 12%]
+tests/test_structured_generation_required.py::TestBuildDfaIndex::test_states_to_vocab_contains_valid_tokens PASSED [ 14%]
+tests/test_structured_generation_required.py::TestBuildDfaIndex::test_state_transitions_are_consistent PASSED [ 16%]
+tests/test_structured_generation_required.py::TestBuildDfaIndex::test_multichar_token_transitions PASSED [ 18%]
+tests/test_structured_generation_required.py::TestDfaMask::test_valid_tokens_get_zero PASSED [ 20%]
+tests/test_structured_generation_required.py::TestDfaMask::test_invalid_tokens_get_neginf PASSED [ 21%]
+tests/test_structured_generation_required.py::TestDfaMask::test_empty_state_all_neginf PASSED [ 23%]
+tests/test_structured_generation_required.py::TestDfaMask::test_unknown_state_raises_key_error PASSED [ 25%]
+tests/test_structured_generation_required.py::TestDfaMask::test_returns_correct_shape PASSED [ 27%]
+tests/test_structured_generation_required.py::TestNaiveVsDfa::test_both_approaches_allow_same_tokens_at_start PASSED [ 29%]
+tests/test_structured_generation_required.py::TestMakeDeterministicFsm::test_initial_state_is_zero PASSED [ 30%]
+tests/test_structured_generation_required.py::TestMakeDeterministicFsm::test_states_are_contiguous_integers PASSED [ 32%]
+tests/test_structured_generation_required.py::TestMakeDeterministicFsm::test_mapping_covers_all_original_states PASSED [ 34%]
+tests/test_structured_generation_required.py::TestMakeDeterministicFsm::test_finals_are_subset_of_states PASSED [ 36%]
+tests/test_structured_generation_required.py::TestMakeDeterministicFsm::test_transitions_point_to_valid_states PASSED [ 38%]
+tests/test_structured_generation_required.py::TestMakeDeterministicFsm::test_simple_pattern PASSED [ 40%]
+tests/test_structured_generation_required.py::TestWalkTokenThroughFsm::test_single_digit_valid_from_initial PASSED [ 41%]
+tests/test_structured_generation_required.py::TestWalkTokenThroughFsm::test_dot_valid_from_initial PASSED [ 43%]
+tests/test_structured_generation_required.py::TestWalkTokenThroughFsm::test_letter_rejected_from_initial PASSED [ 45%]
+tests/test_structured_generation_required.py::TestWalkTokenThroughFsm::test_multichar_token PASSED [ 47%]
+tests/test_structured_generation_required.py::TestWalkTokenThroughFsm::test_returns_correct_landing_state PASSED [ 49%]
+tests/test_structured_generation_required.py::TestWalkTokenThroughFsm::test_empty_token_returns_same_state PASSED [ 50%]
+tests/test_structured_generation_required.py::TestCreateFsmIndexTokenizer::test_returns_token_fsm_and_index PASSED [ 52%]
+tests/test_structured_generation_required.py::TestCreateFsmIndexTokenizer::test_initial_state_matches PASSED [ 54%]
+tests/test_structured_generation_required.py::TestCreateFsmIndexTokenizer::test_finals_match PASSED [ 56%]
+tests/test_structured_generation_required.py::TestCreateFsmIndexTokenizer::test_invalid_token_not_in_index PASSED [ 58%]
+tests/test_structured_generation_required.py::TestCreateFsmIndexTokenizer::test_constrained_generation_produces_valid_output PASSED [ 60%]
+tests/test_structured_generation_required.py::TestWalkDeterministic::test_literal_string_is_deterministic PASSED [ 61%]
+tests/test_structured_generation_required.py::TestWalkDeterministic::test_alternation_is_not_deterministic PASSED [ 63%]
+tests/test_structured_generation_required.py::TestWalkDeterministic::test_zero_chars_is_always_deterministic PASSED [ 65%]
+tests/test_structured_generation_required.py::TestWalkDeterministic::test_digit_range_is_not_deterministic PASSED [ 67%]
+tests/test_structured_generation_required.py::TestWalkDeterministic::test_partial_deterministic_path PASSED [ 69%]
+tests/test_structured_generation_required.py::TestBuildTokenizerIndex::test_returns_four_elements PASSED [ 70%]
+tests/test_structured_generation_required.py::TestBuildTokenizerIndex::test_returns_token_fsm PASSED [ 72%]
+tests/test_structured_generation_required.py::TestBuildTokenizerIndex::test_precomputed_masks_are_numpy_arrays PASSED [ 74%]
+tests/test_structured_generation_required.py::TestBuildTokenizerIndex::test_precomputed_masks_are_read_only PASSED [ 76%]
+tests/test_structured_generation_required.py::TestBuildTokenizerIndex::test_coalesced_tokens_are_valid_transitions PASSED [ 78%]
+tests/test_structured_generation_required.py::TestBuildTokenizerIndex::test_coalesced_tokens_pick_longest PASSED [ 80%]
+tests/test_structured_generation_required.py::TestBuildTokenizerIndex::test_build_time_is_positive PASSED [ 81%]
+tests/test_structured_generation_required.py::TestBuildTokenizerIndex::test_no_coalescence_on_nondeterministic_path PASSED [ 83%]
+tests/test_structured_generation_required.py::TestBuildTokenizerIndex::test_generation_stays_on_valid_transitions PASSED [ 85%]
+tests/test_structured_generation_required.py::TestGenerateUnconstrained::test_generates_tokens PASSED [ 87%]
+tests/test_structured_generation_required.py::TestGenerateUnconstrained::test_greedy_is_deterministic PASSED [ 89%]
+tests/test_structured_generation_required.py::TestGenerateUnconstrained::test_brace_depth_stopping PASSED [ 90%]
+tests/test_structured_generation_required.py::TestGenerateUnconstrained::test_does_not_modify_input_ids PASSED [ 92%]
+tests/test_structured_generation_required.py::TestGenerateConstrained::test_fully_deterministic_pattern PASSED [ 94%]
+tests/test_structured_generation_required.py::TestGenerateConstrained::test_longest_token_is_used PASSED [ 96%]
+tests/test_structured_generation_required.py::TestGenerateConstrained::test_output_matches_pattern PASSED [ 98%]
+tests/test_structured_generation_required.py::TestGenerateConstrained::test_returns_four_values PASSED [100%]
+
+============================== 55 passed in 1.36s ==============================
+--- Part 2 tests ---
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.2, pluggy-1.6.0 -- /workspace/llm_controlled-generation/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/llm_controlled-generation
+configfile: pyproject.toml
+plugins: anyio-4.12.1
+collecting ... collected 26 items
+
+tests/test_meta_generation_required.py::TestGenerateOne::test_extracts_code_and_logprob PASSED [  3%]
+tests/test_meta_generation_required.py::TestGenerateOne::test_no_logprobs_returns_neginf PASSED [  7%]
+tests/test_meta_generation_required.py::TestGenerateOne::test_empty_logprobs_content_returns_neginf PASSED [ 11%]
+tests/test_meta_generation_required.py::TestRankByLogprob::test_highest_logprob_first PASSED [ 15%]
+tests/test_meta_generation_required.py::TestRankByLogprob::test_already_sorted PASSED [ 19%]
+tests/test_meta_generation_required.py::TestRankByLogprob::test_single_element PASSED [ 23%]
+tests/test_meta_generation_required.py::TestRankByLogprob::test_equal_logprobs PASSED [ 26%]
+tests/test_meta_generation_required.py::TestRankByLogprob::test_returns_all_indices PASSED [ 30%]
+tests/test_meta_generation_required.py::TestRankByEditSim::test_identical_codes_ranked PASSED [ 34%]
+tests/test_meta_generation_required.py::TestRankByEditSim::test_single_code PASSED [ 38%]
+tests/test_meta_generation_required.py::TestRankByEditSim::test_returns_all_indices PASSED [ 42%]
+tests/test_meta_generation_required.py::TestRankByEditSim::test_majority_consensus_wins PASSED [ 46%]
+tests/test_meta_generation_required.py::TestRankByEditSim::test_empty_strings PASSED [ 50%]
+tests/test_meta_generation_required.py::TestRankByEditSim::test_both_empty_similarity_is_one PASSED [ 53%]
+tests/test_meta_generation_required.py::TestRankByEditSim::test_normalized_distance PASSED [ 57%]
+tests/test_meta_generation_required.py::TestRankByExecSim::test_no_func_calls_returns_identity PASSED [ 61%]
+tests/test_meta_generation_required.py::TestRankByExecSim::test_agreeing_codes_ranked_higher PASSED [ 65%]
+tests/test_meta_generation_required.py::TestRankByExecSim::test_returns_all_indices PASSED [ 69%]
+tests/test_meta_generation_required.py::TestRankByExecSim::test_failing_code_gets_zero_similarity PASSED [ 73%]
+tests/test_meta_generation_required.py::TestRankByExecSim::test_partial_agreement_on_multiple_calls PASSED [ 76%]
+tests/test_meta_generation_required.py::TestEvaluateProblem::test_all_passing PASSED [ 80%]
+tests/test_meta_generation_required.py::TestEvaluateProblem::test_mixed_passing PASSED [ 84%]
+tests/test_meta_generation_required.py::TestEvaluateProblem::test_logprob_pick_is_best_logprob PASSED [ 88%]
+tests/test_meta_generation_required.py::TestEvaluateProblem::test_returns_correct_structure PASSED [ 92%]
+tests/test_meta_generation_required.py::TestEvaluateProblem::test_all_failing PASSED [ 96%]
+tests/test_meta_generation_required.py::TestEvaluateProblem::test_exec_sim_uses_first_test_only PASSED [100%]
+
+============================== 26 passed in 1.49s ==============================
+--- Part 3 tests ---
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.2, pluggy-1.6.0 -- /workspace/llm_controlled-generation/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/llm_controlled-generation
+configfile: pyproject.toml
+plugins: anyio-4.12.1
+collecting ... collected 30 items
+
+tests/test_self_correction_required.py::TestFirstVerifIntegration::test_all_five_examples_are_valid PASSED [  3%]
+tests/test_self_correction_required.py::TestFirstVerifIntegration::test_each_example_is_valid_individually PASSED [  6%]
+tests/test_self_correction_required.py::TestFirstVerifIntegration::test_correct_program_is_verified PASSED [ 10%]
+tests/test_self_correction_required.py::TestFirstVerif::test_separates_valid_verified_invalid PASSED [ 13%]
+tests/test_self_correction_required.py::TestFirstVerif::test_empty_generations PASSED [ 16%]
+tests/test_self_correction_required.py::TestFirstVerif::test_all_verified PASSED [ 20%]
+tests/test_self_correction_required.py::TestFirstVerif::test_all_invalid PASSED [ 23%]
+tests/test_self_correction_required.py::TestFirstVerif::test_passes_input_program_and_verus_path PASSED [ 26%]
+tests/test_self_correction_required.py::TestFilterValid::test_keeps_nonnegative_scores PASSED [ 30%]
+tests/test_self_correction_required.py::TestFilterValid::test_empty_input PASSED [ 33%]
+tests/test_self_correction_required.py::TestFilterValid::test_all_negative PASSED [ 36%]
+tests/test_self_correction_required.py::TestFilterValid::test_all_positive PASSED [ 40%]
+tests/test_self_correction_required.py::TestFilterValid::test_preserves_order PASSED [ 43%]
+tests/test_self_correction_required.py::TestDeduplicate::test_removes_duplicates_keeps_best_score PASSED [ 46%]
+tests/test_self_correction_required.py::TestDeduplicate::test_no_duplicates_returns_all PASSED [ 50%]
+tests/test_self_correction_required.py::TestDeduplicate::test_all_same_code_keeps_one PASSED [ 53%]
+tests/test_self_correction_required.py::TestDeduplicate::test_single_element PASSED [ 56%]
+tests/test_self_correction_required.py::TestRebaseSelect::test_returns_correct_batch_size PASSED [ 60%]
+tests/test_self_correction_required.py::TestRebaseSelect::test_scores_come_from_input_triples PASSED [ 63%]
+tests/test_self_correction_required.py::TestRebaseSelect::test_low_temperature_favors_best PASSED [ 66%]
+tests/test_self_correction_required.py::TestRebaseSelect::test_deepcopies_states PASSED [ 70%]
+tests/test_self_correction_required.py::TestRebaseSelect::test_single_triple PASSED [ 73%]
+tests/test_self_correction_required.py::TestIterativeRefinement::test_returns_none_when_all_invalid PASSED [ 76%]
+tests/test_self_correction_required.py::TestIterativeRefinement::test_returns_on_verified PASSED [ 80%]
+tests/test_self_correction_required.py::TestIterativeRefinement::test_runs_max_iters_without_verification PASSED [ 83%]
+tests/test_self_correction_required.py::TestIterativeRefinement::test_mixed_valid_and_invalid_within_iteration PASSED [ 86%]
+tests/test_self_correction_required.py::TestIterativeRefinement::test_recovers_after_all_invalid_iteration PASSED [ 90%]
+tests/test_self_correction_required.py::TestIterativeRefinement::test_expand_to_batch_pads_initial_programs PASSED [ 93%]
+tests/test_self_correction_required.py::TestIterativeRefinement::test_refinement_message_appended_to_history PASSED [ 96%]
+tests/test_self_correction_required.py::TestIterativeRefinement::test_generator_called_exact_max_iters_times PASSED [100%]
+
+============================== 30 passed in 6.66s ==============================
+
+==========================================
+ All benchmarks and tests completed!
+==========================================

@@ -1,0 +1,51 @@
+number of parameters: 0.09M
+running on device cuda
+iter_dt 0.00ms; iter 0: train loss 1.10938
+iter_dt 23.62ms; iter 100: train loss 0.14848
+iter_dt 25.40ms; iter 200: train loss 0.08484
+iter_dt 16.56ms; iter 300: train loss 0.04931
+iter_dt 16.66ms; iter 400: train loss 0.04685
+iter_dt 11.87ms; iter 500: train loss 0.03101
+iter_dt 13.32ms; iter 600: train loss 0.01968
+iter_dt 20.33ms; iter 700: train loss 0.02729
+iter_dt 16.91ms; iter 800: train loss 0.02229
+iter_dt 14.99ms; iter 900: train loss 0.00749
+train final score: 5000/5000 = 100.00% correct
+test final score: 5000/5000 = 100.00% correct
+GPT claims that [2, 1, 2, 0, 0, 2, 0, 0, 0, 2] sorted is [2, 2, 2, 2, 2, 2, 2, 2, 2, 2] but gt is [0, 0, 0, 0, 0, 1, 2, 2, 2, 2]
+GPT claims that [2, 2, 1, 0, 0, 2, 1, 0, 1, 0] sorted is [2, 2, 2, 2, 2, 2, 2, 2, 2, 2] but gt is [0, 0, 0, 0, 1, 1, 1, 2, 2, 2]
+GPT claims that [0, 2, 0, 1, 0, 2, 2, 1, 0, 1] sorted is [2, 2, 1, 2, 2, 2, 2, 2, 2, 2] but gt is [0, 0, 0, 0, 1, 1, 1, 2, 2, 2]
+train final score: 1/5000 = 0.02% correct
+GPT claims that [1, 1, 0, 0, 2, 2, 2, 2, 2, 2] sorted is [2, 2, 2, 2, 2, 2, 2, 2, 2, 2] but gt is [0, 0, 1, 1, 2, 2, 2, 2, 2, 2]
+GPT claims that [0, 1, 0, 2, 2, 1, 2, 1, 2, 1] sorted is [2, 2, 1, 2, 2, 2, 2, 2, 2, 2] but gt is [0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
+GPT claims that [0, 1, 0, 2, 1, 2, 0, 2, 0, 0] sorted is [2, 2, 1, 1, 2, 1, 1, 1, 1, 1] but gt is [0, 0, 0, 0, 0, 1, 1, 2, 2, 2]
+test final score: 0/5000 = 0.00% correct
+running on device cuda
+iter_dt 0.00ms; iter 0: train loss 5.03483
+iter_dt 14.02ms; iter 100: train loss 0.57830
+iter_dt 17.65ms; iter 200: train loss 0.35349
+iter_dt 18.72ms; iter 300: train loss 0.30407
+iter_dt 19.05ms; iter 400: train loss 0.27701
+iter_dt 18.21ms; iter 500: train loss 0.21657
+iter_dt 19.20ms; iter 600: train loss 0.18332
+iter_dt 12.57ms; iter 700: train loss 0.18227
+iter_dt 16.46ms; iter 800: train loss 0.14282
+iter_dt 8.86ms; iter 900: train loss 0.19140
+iter_dt 19.16ms; iter 1000: train loss 0.13756
+iter_dt 15.25ms; iter 1100: train loss 0.15160
+iter_dt 11.75ms; iter 1200: train loss 0.13155
+iter_dt 15.03ms; iter 1300: train loss 0.14201
+iter_dt 18.55ms; iter 1400: train loss 0.12281
+iter_dt 18.77ms; iter 1500: train loss 0.10209
+iter_dt 16.05ms; iter 1600: train loss 0.11759
+iter_dt 13.61ms; iter 1700: train loss 0.11334
+iter_dt 17.63ms; iter 1800: train loss 0.09420
+iter_dt 17.79ms; iter 1900: train loss 0.12373
+GPT claims that [2, 0, 2, 0, 2, 0, 2, 2, 0, 2] sorted is [0, 0, 0, 0, 1, 2, 2, 2, 2, 2] but gt is [0, 0, 0, 0, 2, 2, 2, 2, 2, 2]
+GPT claims that [0, 2, 2, 2, 2, 2, 0, 0, 2, 2] sorted is [0, 0, 0, 1, 2, 2, 2, 2, 2, 2] but gt is [0, 0, 0, 2, 2, 2, 2, 2, 2, 2]
+GPT claims that [2, 2, 2, 1, 2, 2, 2, 2, 2, 2] sorted is [2, 2, 2, 2, 2, 2, 2, 2, 2, 2] but gt is [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+train final score: 4766/5000 = 95.32% correct
+GPT claims that [1, 2, 1, 1, 2, 2, 0, 1, 1, 2] sorted is [0, 0, 1, 1, 1, 1, 2, 2, 2, 2] but gt is [0, 1, 1, 1, 1, 1, 2, 2, 2, 2]
+GPT claims that [2, 2, 1, 1, 2, 1, 1, 1, 1, 0] sorted is [0, 1, 1, 1, 1, 1, 2, 2, 2, 2] but gt is [0, 1, 1, 1, 1, 1, 1, 2, 2, 2]
+GPT claims that [1, 1, 2, 1, 1, 1, 0, 1, 1, 2] sorted is [0, 0, 1, 1, 1, 1, 1, 1, 2, 2] but gt is [0, 1, 1, 1, 1, 1, 1, 1, 2, 2]
+test final score: 4788/5000 = 95.76% correct

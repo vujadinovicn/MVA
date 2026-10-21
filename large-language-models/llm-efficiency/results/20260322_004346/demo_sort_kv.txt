@@ -1,0 +1,33 @@
+1 -1
+0 -1
+1 -1
+0 -1
+0 -1
+0 0
+0 0
+0 0
+0 0
+0 1
+1 1
+number of parameters: 0.09M
+running on device cuda
+iter_dt 0.00ms; iter 0: train loss 1.10114
+iter_dt 9.41ms; iter 100: train loss 0.14783
+iter_dt 10.36ms; iter 200: train loss 0.06400
+iter_dt 18.51ms; iter 300: train loss 0.04560
+iter_dt 16.85ms; iter 400: train loss 0.05304
+iter_dt 16.34ms; iter 500: train loss 0.01201
+iter_dt 17.08ms; iter 600: train loss 0.02990
+iter_dt 16.62ms; iter 700: train loss 0.00704
+iter_dt 17.02ms; iter 800: train loss 0.01795
+iter_dt 17.21ms; iter 900: train loss 0.01172
+train final score: 5000/5000 = 100.00% correct
+test final score: 5000/5000 = 100.00% correct
+input sequence  : [[0, 0, 2, 1, 0, 1]]
+predicted sorted: [[0, 0, 0, 1, 1, 2]]
+gt sort         : [0, 0, 0, 1, 1, 2]
+matches         : True
+number of parameters: 2.77M
+running on device cuda
+without KV caching: 0.639 +- 0.024 seconds
+with KV caching: 0.711 +- 0.022 seconds

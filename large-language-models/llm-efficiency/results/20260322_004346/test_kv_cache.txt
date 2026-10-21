@@ -1,0 +1,31 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.2, pluggy-1.6.0 -- /workspace/llm-efficiency-vujadinovicn/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /workspace/llm-efficiency-vujadinovicn
+configfile: pyproject.toml
+plugins: anyio-4.12.1
+collecting ... collected 21 items
+
+tests/test_kv_cache.py::TestCausalSelfAttentionKV::test_returns_output_and_cache PASSED [  4%]
+tests/test_kv_cache.py::TestCausalSelfAttentionKV::test_output_shape PASSED [  9%]
+tests/test_kv_cache.py::TestCausalSelfAttentionKV::test_kv_cache_shape PASSED [ 14%]
+tests/test_kv_cache.py::TestCausalSelfAttentionKV::test_no_cache_matches_baseline PASSED [ 19%]
+tests/test_kv_cache.py::TestCausalSelfAttentionKV::test_last_token_with_cache PASSED [ 23%]
+tests/test_kv_cache.py::TestCausalSelfAttentionKV::test_incremental_matches_full PASSED [ 28%]
+tests/test_kv_cache.py::TestBlockKV::test_returns_output_and_cache PASSED [ 33%]
+tests/test_kv_cache.py::TestBlockKV::test_output_shape PASSED            [ 38%]
+tests/test_kv_cache.py::TestBlockKV::test_no_cache_matches_block PASSED  [ 42%]
+tests/test_kv_cache.py::TestBlockKV::test_last_token_with_cache PASSED   [ 47%]
+tests/test_kv_cache.py::TestBlockKV::test_incremental_matches_full PASSED [ 52%]
+tests/test_kv_cache.py::TestGPTKVForward::test_no_cache_matches_gpt PASSED [ 57%]
+tests/test_kv_cache.py::TestGPTKVForward::test_with_cache_returns_three_values PASSED [ 61%]
+tests/test_kv_cache.py::TestGPTKVForward::test_new_kv_cache_has_one_entry_per_layer PASSED [ 66%]
+tests/test_kv_cache.py::TestGPTKVForward::test_incremental_matches_full PASSED [ 71%]
+tests/test_kv_cache.py::TestGPTKVForward::test_compute_first_repopulates_existing_cache PASSED [ 76%]
+tests/test_kv_cache.py::TestGPTKVGenerate::test_output_length PASSED     [ 80%]
+tests/test_kv_cache.py::TestGPTKVGenerate::test_prefix_preserved PASSED  [ 85%]
+tests/test_kv_cache.py::TestGPTKVGenerate::test_matches_generate_greedy PASSED [ 90%]
+tests/test_kv_cache.py::TestGPTKVGenerate::test_matches_generate_with_temperature PASSED [ 95%]
+tests/test_kv_cache.py::TestGPTKVGenerate::test_matches_generate_with_top_k PASSED [100%]
+
+============================== 21 passed in 5.35s ==============================
