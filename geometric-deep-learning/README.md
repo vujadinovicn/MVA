@@ -21,8 +21,9 @@ The course is about analysing 3D geometry, mostly surfaces and meshes. The first
 | TD4 | DiffusionNet for RNA surface segmentation | [td4-diffusionnet-rna-segmentation](td4-diffusionnet-rna-segmentation) |
 | TD6 | Implicit shape interpolation with SIREN | [td6-implicit-shape-interpolation](td6-implicit-shape-interpolation) |
 
-
 ## TD2: Surface parameterization and alignment
+
+Notebook: [td2_parameterization_and_alignment.ipynb](td2-parameterization-and-alignment/td2_parameterization_and_alignment.ipynb)
 
 In the first part we compute a parameterization of a triangle mesh, meaning a 2D coordinate for each vertex. We use it to map a texture on the 3D surface.
 - **Tutte embedding.** The border is fixed on a circle and each inner vertex sits at the barycenter of its neighbours. This comes down to solving a sparse linear system.
@@ -36,6 +37,7 @@ Libraries: numpy, scipy (sparse solvers), meshplot.
 
 ## TD4: DiffusionNet for RNA segmentation
 
+Notebook: [td4_diffusionnet_rna_segmentation.ipynb](td4-diffusionnet-rna-segmentation/td4_diffusionnet_rna_segmentation.ipynb)
 
 Here we implement [DiffusionNet](https://arxiv.org/pdf/2012.00888.pdf) in PyTorch and use it to segment RNA molecules seen as surfaces.
 
@@ -57,6 +59,8 @@ The trained weights are in [models](td4-diffusionnet-rna-segmentation/models) an
 Libraries: PyTorch.
 
 ## TD6: Implicit shape interpolation
+
+Notebook: [td6_implicit_shape_interpolation.ipynb](td6-implicit-shape-interpolation/td6_implicit_shape_interpolation.ipynb)
 
 In this lab we learn the path between two shapes as a single neural signed distance function $F(x, t)$. At $t = 0$ it is the SDF of the first shape and at $t = 1$ it is the SDF of the second one. The network used is a [SIREN](https://arxiv.org/pdf/2006.09661).
 

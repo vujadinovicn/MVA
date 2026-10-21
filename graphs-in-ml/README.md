@@ -25,6 +25,7 @@ The course is about machine learning on graphs, either networks (social, biologi
 
 ## TD1: Spectral clustering
 
+Notebook: [td1_spectral_clustering.ipynb](td1-spectral-clustering/td1_spectral_clustering.ipynb)
 
 We build spectral clustering step by step and test it on toy datasets and on images.
 - **Data and similarity graphs.** We generate datasets like blobs and two moons, then build k-NN and epsilon graphs from them. The questions are about how the parameters change the graph and why a connected graph matters.
@@ -36,6 +37,8 @@ Libraries: numpy, scipy, scikit-learn, networkx, scikit-image.
 
 ## TD2: Semi-supervised learning
 
+Notebook: [td2_semi_supervised_learning.ipynb](td2-semi-supervised-learning/td2_semi_supervised_learning.ipynb)
+
 The goal is to label a graph from only a few known labels, using the harmonic function solution (HFS).
 - **HFS.** We implement the hard and the soft version of HFS, and test them on two moons. The questions look at the effect of the number of labels and of noisy labels.
 - **Face recognition.** We extend HFS to several classes, tested on a small and an augmented face dataset.
@@ -46,6 +49,7 @@ Libraries: numpy, scipy, scikit-learn, OpenCV.
 
 ## TD3: Graph neural networks
 
+Notebook: [td3_graph_neural_networks.ipynb](td3-graph-neural-networks/td3_graph_neural_networks.ipynb)
 
 An introduction to GNNs with JAX and jraph. We start from how a graph is represented, then build the layers ourselves.
 - **GCN.** From a simple message passing layer up to the full GCN with self-edges and symmetric normalization. Node classification on the Karate Club graph.

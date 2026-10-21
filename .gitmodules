@@ -4,3 +4,9 @@
 [submodule "geometric-data-analysis/ScoreBasedGenerativeModels"]
 	path = geometric-data-analysis/ScoreBasedGenerativeModels
 	url = https://github.com/vujadinovicn/ScoreBasedGenerativeModels
+[submodule "dl-for-medical-imaging/bida-sr"]
+	path = dl-for-medical-imaging/bida-sr
+	url = https://github.com/vujadinovicn/bida-sr
+[submodule "dl-for-medical-imaging/histopathology-OOD-classification"]
+	path = dl-for-medical-imaging/histopathology-OOD-classification
+	url = https://github.com/vujadinovicn/histopathology-OOD-classification

@@ -24,4 +24,6 @@ The course is about probabilistic modeling with graphical models and the algorit
 
 ## Project: Denoising Diffusion Probabilistic Models
 
+Repository: [vujadinovicn/DDPM](https://github.com/vujadinovicn/DDPM)
+
 We reproduce and extend "Denoising Diffusion Probabilistic Models" (Ho et al., 2020). The DDPM is implemented from scratch in PyTorch and trained on a subset of MNIST. We use it to compare four theoretically equivalent training objectives, to study a learned reverse variance, and to apply classifier-free guidance.

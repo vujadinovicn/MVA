@@ -16,11 +16,12 @@ The course is about a geometric view of machine learning models. It shows how ge
 
 ## Content of this folder
 
-
 | Project | Topic | Folder |
 | --- | --- | --- |
 | Project | A reproduction and extension of "Generative Modeling by Estimating Gradients of the Data Distribution" (Song & Ermon, 2019) | [ScoreBasedGenerativeModels](ScoreBasedGenerativeModels) |
 
 ## Project: Score-based generative modeling
+
+Repository: [vujadinovicn/ScoreBasedGenerativeModels](https://github.com/vujadinovicn/ScoreBasedGenerativeModels)
 
 We reproduce and extend "Generative Modeling by Estimating Gradients of the Data Distribution" (Song & Ermon, 2019). We implement a noise-conditional score network with annealed Langevin dynamics in PyTorch from scratch, trained on a subset of Fashion-MNIST. We use it to study the choice of the variance schedule and to generate images in a PCA latent space.
